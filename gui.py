@@ -2,6 +2,8 @@ import PySimpleGUI as sg
 from datetime import datetime
 from pull_fliers_process import pull_fliers_process
 
+checkboxes_to_check = []
+
 def open_add(date_of_interface):
 	layout = [[sg.Text("Atenção: Por favor preencha o nome do concorrente em letras minúsculas", text_color ="red", key="new_add")], [sg.Input("competidor", key="nome_add_competidor"), sg.Button("Ok", key="okAdd")]]
 	window = sg.Window("Add Competitor", layout, modal=True)
@@ -45,19 +47,25 @@ def create_layout(data):
 
 	checkboxes = []
 	checkbox_line = []
+	global checkboxes_to_check
+	checkboxes_to_check = []
 	with open('competitors.conf', encoding='utf8') as f:
 		split=0
 		for line in f:
 			line = line.strip()
 			if split != 3:
-				checkbox = sg.Checkbox(line, key="-IN{comp}-".format(comp=line), size=(10,1))
+				key_name = "{comp}".format(comp=line)
+				checkbox = sg.Checkbox(line, key=key_name, size=(10,1))
 				checkbox_line.append(checkbox)
+				checkboxes_to_check.append(key_name)
 				split = split+1
 			else:
 				checkboxes.append(checkbox_line)
 				checkbox_line = []
-				checkbox = sg.Checkbox(line, key="-IN{comp}-".format(comp=line), size=(10,1))
+				key_name = "{comp}".format(comp=line)
+				checkbox = sg.Checkbox(line, key=key_name, size=(10,1))
 				checkbox_line.append(checkbox)
+				checkboxes_to_check.append(key_name)
 				split = 1
 		checkboxes.append(checkbox_line)
 
@@ -65,6 +73,17 @@ def create_layout(data):
 
 	layout = layout + [[sg.Frame(layout=checkboxes, title='Competidores',title_color='red', relief=sg.RELIEF_SUNKEN)]] + botoes_competidores + [[sg.Text('Output', key='-OUT-')],[sg.Button("Ok", key='process_stuff'), sg.Button("Sair")]]
 	return layout
+
+def check_checked_competitors(window):
+	print(checkboxes_to_check)
+	competitors_list = []
+	for key in checkboxes_to_check:
+		print(key)
+		if window[key].get() == True:
+			competitors_list.append(key)
+	return competitors_list
+
+
 
 def main():
 	layout = create_layout(datetime.now())
@@ -85,10 +104,10 @@ def main():
 		if event == "process_stuff":
 			try:
 				window['-OUT-'].update('Processing... Please wait.')
-
-				with open("competitors.conf", "r", encoding='utf8') as file:
-					competitors = [line.rstrip('\n') for line in file]
-				print("Competitors: ")
+				competitors = check_checked_competitors(window)
+				#with open("competitors.conf", "r", encoding='utf8') as file:
+				#	competitors = [line.rstrip('\n') for line in file]
+				#print("Competitors: ")
 				print(competitors)
 
 				date_picked = datetime.strptime(values['-DATE-'], "%d/%b/%Y")
