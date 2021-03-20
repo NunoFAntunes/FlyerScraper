@@ -8,7 +8,8 @@ import re
 from docx import Document
 from docx.shared import Inches
 
-competitors = ["continente", "jumbo", "aldi", "e-leclerc", "auchan", "amanhecer", "lidl", "minipreço", "pingo doce"]
+with open("competitors.conf", "r", encoding='utf8') as file:
+	competitors = [line.rstrip('\n') for line in file]
 URL = "https://blog200porcento.com/?skip="
 MAIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 

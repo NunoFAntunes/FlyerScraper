@@ -43,7 +43,7 @@ def open_rem(date_of_interface):
 def create_layout(data):
 	now = data
 	layout = [[sg.Text("Baixar folhetos após data:")],
-	[sg.CalendarButton("Escolher Data", target='-DATE-', format="%d/%b/%Y", close_when_date_chosen=True, default_date_m_d_y=(now.month, now.day, now.year)), sg.Input(now.strftime("%d/%b/%Y"), key='-DATE-', disabled=True, use_readonly_for_disable=True, size=(15,1))]]
+	[sg.CalendarButton("Escolher Data", target='-DATE-', format="%d/%b/%Y", close_when_date_chosen=True, default_date_m_d_y=(now.month, now.day, now.year)), sg.Input(now.strftime("%d/%b/%Y"), key='-DATE-', disabled=True, use_readonly_for_disable=True, size=(15,1)), sg.Checkbox("Process all", key="process_all", size=(10,1))]]
 
 	checkboxes = []
 	checkbox_line = []
@@ -103,16 +103,19 @@ def main():
 			window = sg.Window("Baixar Folhetos", layoutOut)
 		if event == "process_stuff":
 			try:
-				window['-OUT-'].update('Processing... Please wait.')
-				competitors = check_checked_competitors(window)
-				#with open("competitors.conf", "r", encoding='utf8') as file:
-				#	competitors = [line.rstrip('\n') for line in file]
-				#print("Competitors: ")
-				print(competitors)
+				if values["process_all"]:
 
-				date_picked = datetime.strptime(values['-DATE-'], "%d/%b/%Y")
-				pull_fliers_process(date_picked.year, date_picked.month, date_picked.day, competitors)
-				window['-OUT-'].update('DONE!')
+				else:
+					window['-OUT-'].update('Processing... Please wait.')
+					competitors = check_checked_competitors(window)
+					#with open("competitors.conf", "r", encoding='utf8') as file:
+					#	competitors = [line.rstrip('\n') for line in file]
+					#print("Competitors: ")
+					print(competitors)
+
+					date_picked = datetime.strptime(values['-DATE-'], "%d/%b/%Y")
+					pull_fliers_process(date_picked.year, date_picked.month, date_picked.day, competitors)
+					window['-OUT-'].update('DONE!')
 			except Exception as e:
 				window['-OUT-'].update('PROCESS FAILED!')
 				raise
