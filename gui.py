@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 from datetime import datetime
+from pull_fliers_process import pull_fliers_process
 
 def open_add(date_of_interface):
 	layout = [[sg.Text("Atenção: Por favor preencha o nome do concorrente em letras minúsculas", text_color ="red", key="new_add")], [sg.Input("competidor", key="nome_add_competidor"), sg.Button("Ok", key="okAdd")]]
@@ -60,9 +61,9 @@ def create_layout(data):
 				split = 1
 		checkboxes.append(checkbox_line)
 
-	botoes_competidores = [[sg.Button("Adicionar Competidor", key="open_add"), sg.Button("Remover Competidor",  key="open_rem"), sg.Button("Refresh", key="refresh_interface")]]
+	botoes_competidores = [[sg.Button("Adicionar Competidor", key="open_add"), sg.Button("Remover Competidor",  key="open_rem")]]
 
-	layout = layout + [[sg.Frame(layout=checkboxes, title='Competidores',title_color='red', relief=sg.RELIEF_SUNKEN)]] + botoes_competidores + [[sg.Text('Output', key='-OUT-')],[sg.Button("Ok"), sg.Button("Sair")]]
+	layout = layout + [[sg.Frame(layout=checkboxes, title='Competidores',title_color='red', relief=sg.RELIEF_SUNKEN)]] + botoes_competidores + [[sg.Text('Output', key='-OUT-')],[sg.Button("Ok", key='process_stuff'), sg.Button("Sair")]]
 	return layout
 
 def main():
@@ -73,7 +74,6 @@ def main():
 		event, values = window.read()
 		if event is None or event == 'Sair':
 			break
-		window['-OUT-'].update('DONE!')
 		if event == "open_add":
 			layoutOut = open_add(datetime.strptime(values['-DATE-'], "%d/%b/%Y"))
 			window.close()
@@ -82,6 +82,25 @@ def main():
 			layoutOut = open_rem(datetime.strptime(values['-DATE-'], "%d/%b/%Y"))
 			window.close()
 			window = sg.Window("Baixar Folhetos", layoutOut)
+		if event == "process_stuff":
+			try:
+				window['-OUT-'].update('Processing... Please wait.')
+
+				with open("competitors.conf", "r", encoding='utf8') as file:
+					competitors = [line.rstrip('\n') for line in file]
+				print("Competitors: ")
+				print(competitors)
+
+				date_picked = datetime.strptime(values['-DATE-'], "%d/%b/%Y")
+				pull_fliers_process(date_picked.year, date_picked.month, date_picked.day, competitors)
+				window['-OUT-'].update('DONE!')
+			except Exception as e:
+				window['-OUT-'].update('PROCESS FAILED!')
+				raise
+			else:
+				pass
+			finally:
+				pass
 	window.close()
 
 if __name__ == "__main__":

@@ -116,7 +116,6 @@ def process_all_posts_into_images(folhetos):
 			if competitor in title:
 				flyer_competitor = competitor
 		image = folheto.get_post_image()
-		# PROCESSAR TITULO POR CAUSA DO NOME DA PASTA
 		process_subpage(image, flyer_competitor, date, title)
 
 
@@ -126,12 +125,10 @@ def process_specific_competitors(folhetos, competitors_to_search):
 		title = str(folheto.get_post_title()).lower()
 		date = folheto.get_post_date()
 		flyer_competitor = "outros"
-		for competitor in competitors:
+		for competitor in competitors_to_search:
 			if competitor in title:
 				flyer_competitor = competitor
-		if flyer_competitor in competitors_to_search:
-			image = folheto.get_post_image()
-			# PROCESSAR TITULO POR CAUSA DO NOME DA PASTA
-			process_subpage(image, flyer_competitor, date, title)
-		else:
-			pass
+				image = folheto.get_post_image()
+				process_subpage(image, flyer_competitor, date, title)
+			else:
+				pass
