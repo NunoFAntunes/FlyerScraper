@@ -11,7 +11,7 @@ from docx.shared import Inches
 with open("competitors.conf", "r", encoding='utf8') as file:
 	competitors = [line.rstrip('\n') for line in file]
 URL = "https://blog200porcento.com/?skip="
-MAIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
+MAIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),".."))
 
 def save_html(html, path):
     with open(path, 'wb') as f:
