@@ -7,7 +7,7 @@ def pull_fliers_process(year, month, day, competitors):
 	print("Processing posts")
 	process_specific_competitors(posts, competitors)
 
-def pull_all_fliers_process(year, month, day, competitors):
+def pull_all_fliers_process(year, month, day):
 	posts = get_all_posts_after(datetime.datetime(year, month, day))
 	#print(posts)
 	print("Processing posts")

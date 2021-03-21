@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from datetime import datetime
-from pull_fliers_process import pull_fliers_process
+from pull_fliers_process import pull_fliers_process, pull_all_fliers_process
 
 checkboxes_to_check = []
 
@@ -103,8 +103,11 @@ def main():
 			window = sg.Window("Baixar Folhetos", layoutOut)
 		if event == "process_stuff":
 			try:
+				window['-OUT-'].update('Processing... Please wait.')
+				date_picked = datetime.strptime(values['-DATE-'], "%d/%b/%Y")
 				if values["process_all"]:
-
+					pull_all_fliers_process(date_picked.year, date_picked.month, date_picked.day)
+					window['-OUT-'].update('DONE!')
 				else:
 					window['-OUT-'].update('Processing... Please wait.')
 					competitors = check_checked_competitors(window)
@@ -112,8 +115,6 @@ def main():
 					#	competitors = [line.rstrip('\n') for line in file]
 					#print("Competitors: ")
 					print(competitors)
-
-					date_picked = datetime.strptime(values['-DATE-'], "%d/%b/%Y")
 					pull_fliers_process(date_picked.year, date_picked.month, date_picked.day, competitors)
 					window['-OUT-'].update('DONE!')
 			except Exception as e:
