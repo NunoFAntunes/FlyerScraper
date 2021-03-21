@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 from datetime import datetime
 from pull_fliers_process import pull_fliers_process, pull_all_fliers_process
+import threading
 
 checkboxes_to_check = []
 
@@ -71,7 +72,7 @@ def create_layout(data):
 
 	botoes_competidores = [[sg.Button("Adicionar Competidor", key="open_add"), sg.Button("Remover Competidor",  key="open_rem")]]
 
-	layout = layout + [[sg.Frame(layout=checkboxes, title='Competidores',title_color='red', relief=sg.RELIEF_SUNKEN)]] + botoes_competidores + [[sg.Text('Output', key='-OUT-')],[sg.Button("Ok", key='process_stuff'), sg.Button("Sair")]]
+	layout = layout + [[sg.Frame(layout=checkboxes, title='Competidores',title_color='red', relief=sg.RELIEF_SUNKEN)]] + botoes_competidores + [[sg.Text('Output', size=(30, 1), key='-OUT-')],[sg.Button("Ok", key='process_stuff'), sg.Button("Sair")]]
 	return layout
 
 def check_checked_competitors(window):
@@ -83,6 +84,13 @@ def check_checked_competitors(window):
 			competitors_list.append(key)
 	return competitors_list
 
+def thread_process_all(window, date_picked):
+	pull_all_fliers_process(date_picked.year, date_picked.month, date_picked.day)
+	window['-OUT-'].update('DONE!')
+
+def thread_process_some(window, date_picked, competitors):
+	pull_fliers_process(date_picked.year, date_picked.month, date_picked.day, competitors)
+	window['-OUT-'].update('DONE!')
 
 
 def main():
@@ -106,8 +114,7 @@ def main():
 				window['-OUT-'].update('Processing... Please wait.')
 				date_picked = datetime.strptime(values['-DATE-'], "%d/%b/%Y")
 				if values["process_all"]:
-					pull_all_fliers_process(date_picked.year, date_picked.month, date_picked.day)
-					window['-OUT-'].update('DONE!')
+					threading.Thread(target=thread_process_all, args=(window, date_picked,), daemon=True).start()
 				else:
 					window['-OUT-'].update('Processing... Please wait.')
 					competitors = check_checked_competitors(window)
@@ -115,8 +122,7 @@ def main():
 					#	competitors = [line.rstrip('\n') for line in file]
 					#print("Competitors: ")
 					print(competitors)
-					pull_fliers_process(date_picked.year, date_picked.month, date_picked.day, competitors)
-					window['-OUT-'].update('DONE!')
+					threading.Thread(target=thread_process_some, args=(window, date_picked, competitors,), daemon=True).start()
 			except Exception as e:
 				window['-OUT-'].update('PROCESS FAILED!')
 				raise
