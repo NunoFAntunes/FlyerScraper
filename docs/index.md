@@ -1,37 +1,14 @@
-## Welcome to GitHub Pages
+## Flyer Scraper
 
-You can use the [editor on GitHub](https://github.com/NunoFAntunes/FlyerScraper/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+### Setup Instructions:
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+1. Download the zip file PromoScaper.zip (or the entire source code). This includes all the compiled code;
+2. Unzip PromoScaper.zip into your preferred location (e.g.: C:/program files/ );
+3. You may now delete the downloaded zip;
+4. For ease of use, you can create a shortcut in the desktop or elsewhere, by right-clicking the executable file and selecting create shortcut.
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/NunoFAntunes/FlyerScraper/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Using the program:
+- Select the date after which you want to fetch flyers;
+- You can add or remove competitors using the interface buttons;
+- Only the competitors selected (ticked box) will be searched for;
+- The downloaded flyers are saved as individual images and .docx files. **These files can be found on the main program installation directory** (the place where the zip file was extracted to).
