@@ -84,6 +84,11 @@ def process_subpage(url, competitor, date, title):
 
 
 	title = re.sub('[!@#$<>:"\\/|?*]', '', title)
+	title = re.sub('é', 'e', title)
+	title = re.sub('áà', 'a', title)
+	title = re.sub('óõò', 'o', title)
+	title = re.sub('ç', 'c', title)
+	title = re.sub(' ', '_', title)
 	
 	folder_raw = os.path.join(competitor_raw_path, date.strftime('%b%Y'), title)
 	folder_word = os.path.join(competitor_word_path, date.strftime('%b%Y'))
@@ -98,7 +103,9 @@ def process_subpage(url, competitor, date, title):
 
 	# IMAGES PROCESSING
 	for img_url in urls:
-		filename = competitor + " " + date.strftime('%Y%m%d') + " " + str(i) + " " + str(randint(0, 999999))
+		filename = competitor + "_" + date.strftime('%Y%m%d') + "_" + str(i) + "_" + str(randint(0, 999999))
+		print("Nome folder:" + folder_raw)
+		print("Nome ficheiro:" + filename)
 		completeName = os.path.join(folder_raw, filename+".png")
 		with open(completeName, 'wb') as f:
 			response = requests.get(img_url)
