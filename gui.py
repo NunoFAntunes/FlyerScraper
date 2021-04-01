@@ -30,9 +30,9 @@ def open_rem(date_of_interface):
 		if event == "Exit" or event == sg.WIN_CLOSED:
 			break
 		if event == "okRem":
-			with open("competitors.conf", "r") as f:
+			with open("competitors.conf", "r", encoding='utf8') as f:
 				lines = f.readlines()
-			with open("competitors.conf", "w") as f:
+			with open("competitors.conf", "w", encoding='utf8') as f:
 				for line in lines:
 					if line.strip("\n") != values["nome_rem_competidor"]:
 						f.write(line)
